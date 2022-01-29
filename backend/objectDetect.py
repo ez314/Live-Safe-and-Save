@@ -22,8 +22,10 @@ class ObjectDetector:
             probs = logits_per_image.softmax(dim=-1).cpu().numpy()
         
         index_max = max(range(len(probs)), key=probs.__getitem__)
+        print(probs)
+        print(probs[0][index_max])
 
-        if probs[index_max]>0.7:
+        if probs[0][index_max]>0.7:
             return options[index_max]
         else:
             return "nothing"
