@@ -1,1 +1,1 @@
-# TAMUhack-2022
+# TAMUHACK 2022
