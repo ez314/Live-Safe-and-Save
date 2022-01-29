@@ -34,7 +34,7 @@ module.exports = {
       },
       borderColor: {
         ...colors
-      }
+      },
     },
   },
   variants: {
