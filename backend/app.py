@@ -1,4 +1,6 @@
 from flask import Flask, request, jsonify
+import traceback
+import logging
 from objectDetect import ObjectDetector
 app = Flask(__name__)
 det = ObjectDetector()
@@ -7,13 +9,15 @@ det = ObjectDetector()
 def objectDetect():
     try:
         file = request.files['image']
-        expected = request.args['expected']
+        print("File uploaded")
+        expected = request.form['expected']
         ret = det.runDetect(file)
         if ret==expected:
             return jsonify({'msg': 'success', 'result': True})
         else:
             return jsonify({'msg': 'success', 'result': False})
-    except:
+    except Exception as e:
+        logging.error(traceback.format_exc())
         return jsonify({'msg': '500 error'})
 
 
