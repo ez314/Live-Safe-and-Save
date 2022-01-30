@@ -5,7 +5,7 @@ export interface HomeAssetProps {
 }
 export default function HomeAsset({ className, type }: HomeAssetProps) {
   return (
-    <Link href={`/manage?itemName=${type?.toLowerCase().replaceAll("\\w+", "%20")}`} >
+    <Link href={`/manage?itemName=${type?.toLowerCase()}`} >
       <div className={`custom-btn ${className}`}>{type}</div>
     </Link>
   )

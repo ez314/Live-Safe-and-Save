@@ -1,15 +1,25 @@
 import { NextPage } from "next"
-import Link from "next/link";
-import { useRouter } from "next/router";
-import CheckSVG from "../components/svg/CheckSVG";
-import CircleSVG from "../components/svg/CircleSVG";
-import BanSVG from "../components/svg/BanSVG";
-import HomeSVG from "../components/svg/HomeSVG";
+import Link from "next/link"
+import Router, { useRouter } from "next/router"
+import CheckSVG from "../components/svg/CheckSVG"
+import CircleSVG from "../components/svg/CircleSVG"
+import BanSVG from "../components/svg/BanSVG"
+import HomeSVG from "../components/svg/HomeSVG"
+import assetsJson from '../assets.json'
+import { processItemName } from "./_app"
 
 const Manage: NextPage = () => {
-  const { query } = useRouter();
-  const itemName = query.itemName;
-  const svgSize = 19;
+  const { query } = useRouter()
+  let itemName = query.itemName
+  if (!itemName || Array.isArray(itemName) || !assetsJson.home.includes(itemName)) {
+    return (
+      <div className='flex flex-col items-center text-custom-white-0'>
+        <div className='text-lg'>Page not found...</div>
+      </div>
+    )
+  }
+  itemName = processItemName(itemName)
+  const svgSize = 19
 
   return (
     <div className='mt-16 flex flex-col items-center text-custom-white-0'>
