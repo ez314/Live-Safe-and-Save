@@ -138,7 +138,7 @@ export default function Add() {
       <div className='flex mt-4 flex-row items-center'>
         <div className='flex flex-row items-center'>
           <Link href='/'>
-            <div className='relative flex flex-col items-center tab-hoverable'>
+            <div className='relative flex flex-col items-center tab-hoverable hover:text-custom-blue transition'>
               <div className='flex flex-row items-center'>
                 <HomeSVG width={svgSize} height={svgSize} />
                 <div className='ml-2 text-lg cursor-pointer'>Home Insurance</div>
@@ -148,7 +148,7 @@ export default function Add() {
           </Link>
           <div>&nbsp;&gt;&nbsp;</div>
           <Link href={`/manage?itemName=${itemName.toLowerCase()}`}>
-            <div className='relative flex flex-col items-center cursor-pointer tab-hoverable'>
+            <div className='relative flex flex-col items-center cursor-pointer tab-hoverable hover:text-custom-blue transition'>
               <div>Manage {itemName}</div>
               <div className='absolute bottom-0 h-mini bg-custom-white-0 w-0 underline' />
             </div>
@@ -200,7 +200,7 @@ export default function Add() {
             setReady({ ...ready, invoiceReady: false })
           }
         }} />
-        <div className={`custom-btn m-9 ${((ready.imageReady || ready.invoiceReady) && ready.nameReady) ? 'hover:bg-custom-green hover:border-custom-green' : 'hover:bg-custom-red hover:border-custom-red'}`} onClick={() => {
+        <div className={`custom-btn m-9 hover:text-custom-white-0 ${((ready.imageReady || ready.invoiceReady) && ready.nameReady) ? 'hover:bg-custom-green hover:border-custom-green' : 'hover:bg-custom-red hover:border-custom-red'}`} onClick={() => {
           addAsset(nameRef.current.value, (inputImageRef.current.files) ? inputImageRef.current.files[0] : undefined, (inputInvoiceRef.current.files) ? inputInvoiceRef.current.files[0] : undefined)
         }}>Add {itemName}</div>
       </div> : <>

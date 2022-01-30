@@ -99,7 +99,7 @@ export default function Registration() {
         }} />
       </div>
       <div className='mt-5 flex flex-row'>
-      <div className={`custom-btn px-10 ${(ready.firstName && ready.lastName && ready.email && ready.password) ? 'hover:bg-custom-green hover:border-custom-green' : 'hover:bg-custom-red hover:border-custom-red'}`} onClick={() => register()}>Register</div>
+      <div className={`custom-btn px-10 hover:text-custom-white-0 ${(ready.firstName && ready.lastName && ready.email && ready.password) ? 'hover:bg-custom-green hover:border-custom-green' : 'hover:bg-custom-red hover:border-custom-red'}`} onClick={() => register()}>Register</div>
       </div>
     </div>
   )

@@ -69,7 +69,7 @@ export default function Login() {
         }} />
       </div>
       <div className='mt-5 flex flex-col justify-center items-center'>
-        <div className={`custom-btn px-10 ${(ready.email && ready.password) ? 'hover:bg-custom-green hover:border-custom-green' : 'hover:bg-custom-red hover:border-custom-red'}`} onClick={() => login()}>Login</div>
+        <div className={`custom-btn px-10 hover:text-custom-white-0 ${(ready.email && ready.password) ? 'hover:bg-custom-green hover:border-custom-green' : 'hover:bg-custom-red hover:border-custom-red'}`} onClick={() => login()}>Login</div>
         <div className='custom-btn px-10' onClick={() => setRegister(true)}>Register</div>
       </div>
     </div>
