@@ -44,7 +44,7 @@ export default function Life() {
         <div className='my-2 text-4xl font-extrabold'><span className='text-custom-green'>$</span>80.83</div>
           <div className='text-md mb-3 underline'>How was this calculated?</div>
 
-
+          <div className="ml-3">
           <div className="grid grid-cols-2 gap-4 min-w-full">
             <ActivityCard type="positive" message="Walked 2.53 miles!" timestamp={new Date().getTime()}/>
             <ActivityCard type="info" message="Heart score met daily goal!" timestamp={new Date(2022, 0, 29, 16, 24).getTime()}/>
@@ -54,6 +54,7 @@ export default function Life() {
             <ActivityCard type="negative" message="Heart score not quite at goal." timestamp={new Date(2022, 0, 23, 10, 12).getTime()}/>
             <ActivityCard type="positive" message="Walked 3.28 miles!" timestamp={new Date(2022, 0, 22, 8).getTime()}/>
             <ActivityCard type="positive" message="Walked 3.28 miles!" timestamp={new Date(2022, 0, 21, 8).getTime()}/>
+          </div>
           </div>
           </> 
           :
