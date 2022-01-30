@@ -51,7 +51,7 @@ export default function Manage({userData, assetsData}) {
         </div>
       </div>
 
-      <div className='flex mt-4 text-center'>{whyItem}</div>
+      <div className='flex mt-4 text-center max-w-2xl'>{whyItem}</div>
 
       <div className='mt-16 flex flex-col items-center'>
         <div className='custom-btn'>Add {itemName}</div>
