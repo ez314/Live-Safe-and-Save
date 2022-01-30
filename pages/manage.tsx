@@ -13,13 +13,19 @@ import Login from "../components/Auth/Login";
 import { useState, useEffect } from "react";
 import { getUser } from "../util/User";
 
-export default function Manage({userData, assetsData}) {
+export default function Manage({assetsData}) {
+  const [activeFilter, setActiveFilter] = useState(true);
+  const [needsAttentionFilter, setNeedsAttentionFilter] = useState(true);
+  const [expiredFilter, setExpiredFilter] = useState(true);
+
   const { query } = useRouter()
+
   const [user, setUser] = useState(undefined)
   useEffect(() => {
     setUser(getUser())
   }, user)
   if (!user) return <Login />
+
   let itemName = query.itemName
   if (!itemName || Array.isArray(itemName) || !assetsJson.home.includes(itemName)) {
     return (
@@ -29,6 +35,9 @@ export default function Manage({userData, assetsData}) {
     )
   }
   itemName = processItemName(itemName)
+
+  assetsData = assetsData.filter(x => x.type == query.itemName && x.owner == user.email)
+
   const svgSize = 19
 
   const whyItem = `Why should I have a ${itemName}? Because it is good! Everyone has one, so you should have one too. A ${itemName} is absolutely essential and saves 18219 homes in the United States last year.`
@@ -60,25 +69,36 @@ export default function Manage({userData, assetsData}) {
       </div>
 
       <div className='mt-16 space-x-8 flex flex-row items-center'>
-        <div className='flex flex-row items-center hover:scale-110 transition'>
-          <CheckSVG className='text-custom-green' width={svgSize} height={svgSize} />
-          <span className='ml-2 text-lg cursor-pointer'>Approved</span>
+        <div
+          className='flex flex-row items-center hover:scale-110 transition cursor-pointer'
+          onClick={() => setActiveFilter(!activeFilter)}
+        >
+          <CheckSVG className={`${activeFilter ? 'text-custom-green' : 'text-custom-gray-3'} transition`} width={svgSize} height={svgSize} />
+          <span className='ml-2 text-lg'>Active</span>
         </div>
-        <div className='flex flex-row items-center hover:scale-110 transition'>
-          <CircleSVG className='text-custom-gray-3' width={svgSize} height={svgSize} />
-          <span className='ml-2 text-lg cursor-pointer'>Needs Attention</span>
+        <div
+          className='flex flex-row items-center hover:scale-110 transition cursor-pointer'
+          onClick={() => setNeedsAttentionFilter(!needsAttentionFilter)}
+        >
+          <CircleSVG className={`${needsAttentionFilter ? 'text-custom-gold' : 'text-custom-gray-3'} transition`} width={svgSize} height={svgSize} />
+          <span className='ml-2 text-lg'>Needs Attention</span>
         </div>
-        <div className='flex flex-row items-center hover:scale-110 transition'>
-          <BanSVG className='text-custom-red' width={svgSize} height={svgSize} />
-          <span className='ml-2 text-lg cursor-pointer'>Expired</span>
+        <div
+          className='flex flex-row items-center hover:scale-110 transition cursor-pointer'
+          onClick={() => setExpiredFilter(!expiredFilter)}
+        >
+          <BanSVG className={`${expiredFilter ? 'text-custom-red' : 'text-custom-gray-3'} transition`} width={svgSize} height={svgSize} />
+          <span className='ml-2 text-lg'>Expired</span>
         </div>
       </div>
 
       <div className='mt-16 space-y-16 w-full flex flex-col items-center'>
         {
-          assetsData.map(
-            ({type, assetId, assetName, img}) =>
-              <AssetCard key={assetId} type={type} assetId={assetId} assetName={assetName} img={img}/>
+          assetsData
+            .filter((data) => data.state == 'active' && activeFilter || data.state == 'needs-attention' && needsAttentionFilter || data.state == 'expired' && expiredFilter)
+            .map(
+            ({type, assetId, assetName, img, state}) =>
+              <AssetCard key={assetId} type={type} assetId={assetId} assetName={assetName} img={img} state={state}/>
           )
         }
       </div>
@@ -90,27 +110,25 @@ export default function Manage({userData, assetsData}) {
 export async function getServerSideProps({ query }) {
   const { db } = require('../util/Firebase')
 
-  // todo: actually have login
-  const username = 'ericz314271@gmail.com'
-
-  const usersRef = db.collection('users').doc(username)
-  const userSnapshot = await usersRef.get()
-  const userData = userSnapshot.data();
-
   const assetsQuery = db.collection('assets')
-    .where('owner', '==', username)
-    .where('type', '==', query.itemName)
   const assetsSnapshot = await assetsQuery.get()
 
+  const currentTimestamp = (new Date()).getTime()
   let assetsData = []
   assetsSnapshot.forEach(doc => {
+    const lastUpdatedTimestamp = Date.parse(doc.data().lastUpdated)
+    const ageDays = (currentTimestamp - lastUpdatedTimestamp) / (1000 * 60 * 60 * 24)
     assetsData.push({
       assetId: doc.id,
-      ...doc.data()
+      lastUpdatedTimestamp,
+      state: ageDays > 30 ? 'expired' : ageDays > 7 ? 'needs-attention' : 'active',
+      ...doc.data(),
     })
   });
 
+  console.log(assetsData)
+
   return {
-    props: {userData, assetsData}
+    props: {assetsData}
   }
 }

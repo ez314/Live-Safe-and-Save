@@ -38,5 +38,10 @@ venv/
 
 .flaskenv
 __pycache__/
+training_invoices/
+InvoiceNet/
+pred_dir/
+internal_storage/
+models/
 /firebase.json
 /storage_account.json
