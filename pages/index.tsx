@@ -14,7 +14,7 @@ const Home: NextPage = () => {
       <div className='mt-16 flex flex-col items-center'>
         <div className='text-xl'>Estimated Discount</div>
         <div className='my-2 text-4xl font-extrabold'><span className='text-custom-green'>$</span>140.87</div>
-        <div className='my-2 p-2 text-xl font-semibold rounded-xl bg-custom-white-0 border-custom-white-0 text-custom-gray-1 cursor-pointer border-2 hover:bg-custom-gray-1 hover:text-custom-white-0 transition-colors'>Recalculate</div>
+        <div className='custom-btn'>Recalculate</div>
       </div>
     </div>
   )
