@@ -2,10 +2,10 @@ import Link from 'next/link'
 import HomeSVG from './svg/HomeSVG'
 import HeartSVG from './svg/HeartSVG'
 
-export default function Header() {
+export default function Header({name}) {
     return (
         <>
-        <div className='text-5xl font-black'>Eric Zhang</div>
+        <div className='text-5xl font-black'>{name}</div>
         <div className='flex mt-4 flex-row items-center'>
         <div className='flex flex-col items-center justify-center tab-hoverable mx-3'>
           <div className='flex flex-row items-center'>

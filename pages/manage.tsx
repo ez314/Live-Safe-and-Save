@@ -7,8 +7,10 @@ import HomeSVG from "../components/svg/HomeSVG"
 import assetsJson from '../assets.json'
 import { processItemName } from "./_app"
 import AssetCard from "../components/AssetCard";
+import {db} from "../util/Firebase";
+import Header from "../components/Header";
 
-export default function Manage({dbData}) {
+export default function Manage({userData}) {
   const { query } = useRouter()
   let itemName = query.itemName
   if (!itemName || Array.isArray(itemName) || !assetsJson.home.includes(itemName)) {
@@ -25,7 +27,7 @@ export default function Manage({dbData}) {
 
   return (
     <div className='mt-16 px-24 flex flex-col items-center text-custom-white-0'>
-      <div className='text-5xl font-black'>Eric Zhang</div>
+      <Header name={userData.name} />
       <div className='flex mt-4 flex-row items-center'>
         <div className='flex flex-row items-center'>
           <Link href='/'>
@@ -74,9 +76,15 @@ export default function Manage({dbData}) {
 }
 
 export async function getServerSideProps() {
-  let db = require('../util/Firebase')
-  let dbData = null; // replace with fetching whatever data you need from firebase
+  const { db } = require('../util/Firebase')
+
+  // todo: actually have login
+  const usersRef = db.collection('users').doc('ericz314271@gmail.com')
+  const userSnapshot = await usersRef.get()
+
+  const userData = userSnapshot.data();
+
   return {
-    props: {dbData}
+    props: {userData}
   }
 }

@@ -3,11 +3,11 @@ import assetsJson from '../assets.json'
 import { processItemName } from './_app'
 import Header from '../components/Header'
 
-export default function Home({dbData}) {
+export default function Home({userData}) {
   const assets = assetsJson.home.map((t) => <HomeAsset key={t} className='m-3' type={processItemName(t)} />)
   return (
     <div className='mt-16 flex flex-col items-center text-custom-white-0'>
-      <Header />
+      <Header name={userData.name} />
 
       <div className='mt-16 flex flex-col items-center'>
         <div className='text-xl'>Estimated Discount</div>
@@ -23,9 +23,15 @@ export default function Home({dbData}) {
 }
 
 export async function getServerSideProps() {
-  let db = require('../util/Firebase')
-  let dbData = null; // replace with fetching whatever data you need from firebase
+  const { db } = require('../util/Firebase')
+
+  // todo: actually have login
+  const usersRef = db.collection('users').doc('ericz314271@gmail.com')
+  const userSnapshot = await usersRef.get()
+
+  const userData = userSnapshot.data();
+
   return {
-    props: {dbData}
+    props: {userData}
   }
 }
