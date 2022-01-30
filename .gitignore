@@ -43,3 +43,4 @@ InvoiceNet/
 pred_dir/
 internal_storage/
 models/
+/firebase.json
