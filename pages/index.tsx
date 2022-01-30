@@ -25,7 +25,7 @@ export default function Index({ userData }) {
         <div className='custom-btn'>Recalculate</div>
       </div>
       <div className='mt-16 flex flex-col items-center justify-center'>
-        <div className='text-3xl font-semibold'>Manage Assets</div>
+        <div className='text-3xl font-semibold'>Manage Home Safety Features</div>
         <div className='mt-1 flex flex-row flex-wrap max-w-3xl items-center justify-center'>{assets}</div>
       </div>
     </div>

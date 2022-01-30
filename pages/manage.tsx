@@ -48,7 +48,7 @@ export default function Manage({assetsData}) {
       <div className='flex mt-4 flex-row items-center'>
         <div className='flex flex-row items-center'>
           <Link href='/'>
-            <div className='relative flex flex-col items-center tab-hoverable'>
+            <div className='relative flex flex-col items-center tab-hoverable hover:text-custom-blue transition'>
               <div className='flex flex-row items-center'>
                 <HomeSVG width={svgSize} height={svgSize} />
                 <div className='ml-2 text-lg cursor-pointer'>Home Insurance</div>
@@ -81,7 +81,7 @@ export default function Manage({assetsData}) {
           onClick={() => setNeedsAttentionFilter(!needsAttentionFilter)}
         >
           <CircleSVG className={`${needsAttentionFilter ? 'text-custom-gold' : 'text-custom-gray-3'} transition`} width={svgSize} height={svgSize} />
-          <span className='ml-2 text-lg'>Needs Attention</span>
+          <span className='ml-2 text-lg'>Needs Refresh</span>
         </div>
         <div
           className='flex flex-row items-center hover:scale-110 transition cursor-pointer'
