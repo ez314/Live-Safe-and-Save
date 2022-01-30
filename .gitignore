@@ -44,3 +44,4 @@ pred_dir/
 internal_storage/
 models/
 /firebase.json
+/storage_account.json

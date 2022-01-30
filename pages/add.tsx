@@ -11,6 +11,8 @@ import { useEffect, useRef, useState } from "react"
 import { getUser } from "../util/User"
 import Login from "../components/Auth/Login"
 import Header from "../components/Header"
+import { storage } from "../util/Storage"
+import { ref, uploadBytes } from 'firebase/storage'
 
 export default function Add() {
   const { query } = useRouter()
@@ -32,6 +34,50 @@ export default function Add() {
         <div className='text-lg'>Page not found...</div>
       </div>
     )
+  }
+  function addAsset() {
+    const itemName = query.itemName as string
+    const assetRef = ref(storage, `asset/${user.firstName}_${user.lastName}_${itemName.replaceAll(" ", "_")}_${nameRef.current.value}`)
+    const invoiceRef = ref(storage, `invoice/${user.firstName}_${user.lastName}_${itemName.replaceAll(" ", "_")}_${nameRef.current.value}`)
+    async function upload() {
+      let imageUrl = ''
+      let invoiceUrl = ''
+      if (inputImageRef.current.files[0]) {
+        await uploadBytes(assetRef, inputImageRef.current.files[0]).then((result) => {
+          imageUrl = `https://storage.googleapis.com/tamuhack-s22.appspot.com/${result.ref.fullPath}`
+        }).catch((err) => {
+          console.log(err)
+        })
+      }
+      if (inputInvoiceRef.current.files[0]) {
+        await uploadBytes(invoiceRef, inputInvoiceRef.current.files[0]).then((result) => {
+          invoiceUrl = `https://storage.googleapis.com/tamuhack-s22.appspot.com/${result.ref.fullPath}`
+        }).catch((err) => {
+          console.log(err)
+        })
+      }
+      fetch('/api/add', {
+        mode: 'cors',
+        method: 'POST',
+        body: JSON.stringify({
+          name: nameRef.current.value,
+          imgUrl: imageUrl,
+          invoiceUrl: invoiceUrl,
+          lastUpdated: Date.now().toString(),
+          owner: user.email,
+          type: itemName,
+          firstName: user.firstName,
+          lastName: user.lastName,
+        })
+      }).then(async (res) => {
+        if (res.status !== 200) {
+          console.log(res.status)
+        }
+        window.open('/', '_self')
+      }).catch((err) => console.log(err))
+    }
+    upload()
+    console.log("UPLOAD")
   }
   itemName = processItemName(itemName)
   const svgSize = 19
@@ -104,7 +150,9 @@ export default function Add() {
             setReady({ ...ready, invoiceReady: false })
           }
         }} />
-        <div className={`custom-btn m-9 ${((ready.imageReady || ready.invoiceReady) && ready.nameReady) ? 'hover:bg-custom-green hover:border-custom-green' : 'hover:bg-custom-red hover:border-custom-red'}`}>Add {itemName}</div>
+        <div className={`custom-btn m-9 ${((ready.imageReady || ready.invoiceReady) && ready.nameReady) ? 'hover:bg-custom-green hover:border-custom-green' : 'hover:bg-custom-red hover:border-custom-red'}`} onClick={() => {
+          addAsset()
+        }}>Add {itemName}</div>
       </div>
     </div>
   )

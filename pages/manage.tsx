@@ -63,7 +63,9 @@ export default function Manage({assetsData}) {
       <div className='flex mt-4 text-center max-w-2xl'>{whyItem}</div>
 
       <div className='mt-16 flex flex-col items-center'>
-        <div className='custom-btn'>Add {itemName}</div>
+        <Link href={`/add?itemName=${itemName.toLowerCase()}`}>
+          <div className='custom-btn'>Add {itemName}</div>
+        </Link>
       </div>
 
       <div className='mt-16 space-x-8 flex flex-row items-center'>
