@@ -10,14 +10,14 @@ export default function Life() {
   const [user, setUser] = useState(undefined)
   let [connected, setConnected] = useState(0);
     let status = "Exceptional"
-    let statusColor = "green"
+
 
     const responseGoogle = (response) => {
 
         setConnected(connected+1)
         setInterval(() => {
           setConnected(100)
-        }, 8000)
+        }, 12000)
     }
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function Life() {
           <div className='custom-btn'>Recalculate</div> */}
           <Chart scores={[22,24,35,37,36,38,40,45]} width={1000}/>
   
-          <span className='text-3xl mt-3'>Your Status: <span className={`text-${statusColor}-300`}>{status}</span></span>
+          <span className='text-3xl mt-3'>Your Status: <span className={`text-green-300`}>{status}</span></span>
           </> 
           :
           connected == 1 ?
