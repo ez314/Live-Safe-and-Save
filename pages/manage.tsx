@@ -81,7 +81,7 @@ export default function Manage({assetsData}) {
           onClick={() => setNeedsAttentionFilter(!needsAttentionFilter)}
         >
           <CircleSVG className={`${needsAttentionFilter ? 'text-custom-gold' : 'text-custom-gray-3'} transition`} width={svgSize} height={svgSize} />
-          <span className='ml-2 text-lg'>Needs Attention</span>
+          <span className='ml-2 text-lg'>Needs Refresh</span>
         </div>
         <div
           className='flex flex-row items-center hover:scale-110 transition cursor-pointer'
