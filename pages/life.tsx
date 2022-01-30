@@ -1,12 +1,20 @@
 import { NextPage } from "next"
 import Header from '../components/Header';
 import Chart from '../components/Chart';
+import { useState, useEffect } from "react";
+import { getUser } from "../util/User";
+import Login from "../components/Auth/Login";
 
-const Life: NextPage = () => {
+export default function Life() {
+  const [user, setUser] = useState(undefined)
+  useEffect(() => {
+    setUser(getUser())
+  }, user)
+  if (!user) return <Login />
   return (
     <div className='mt-16 flex flex-col items-center text-custom-white-0'>
       
-      <Header />
+      <Header name={`${user.firstName} ${user.lastName}`} />
 
       <div className='mt-16 flex flex-col items-center'>
         <div className='text-xl mb-3 '>Health Score</div>
@@ -17,4 +25,3 @@ const Life: NextPage = () => {
     </div>
   )
 }
-export default Life

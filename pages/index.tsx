@@ -2,12 +2,22 @@ import HomeAsset from '../components/HomeAsset'
 import assetsJson from '../assets.json'
 import { processItemName } from './_app'
 import Header from '../components/Header'
+import { useEffect, useState } from 'react'
+import { getUser } from '../util/User'
+import Login from '../components/Auth/Login'
 
 export default function Index({ userData }) {
   const assets = assetsJson.home.map((t) => <HomeAsset key={t} className='m-3' type={processItemName(t)} />)
+  // BEGIN ADD THIS WHEN ADDING NEW PAGE
+  const [user, setUser] = useState(undefined)
+  useEffect(() => {
+    setUser(getUser())
+  }, user)
+  if (!user) return <Login />
+  // END ADD THIS WHEN ADDING NEW PAGE
   return (
     <div className='mt-16 flex flex-col items-center text-custom-white-0'>
-      <Header name={userData.name} />
+      <Header name={`${user.firstName} ${user.lastName}`} />
 
       <div className='mt-16 flex flex-col items-center'>
         <div className='text-xl'>Estimated Discount</div>

@@ -9,9 +9,17 @@ import assetsJson from '../assets.json'
 import { processItemName } from "./_app"
 import AssetCard from "../components/AssetCard";
 import {db} from "../util/Firebase";
+import Login from "../components/Auth/Login";
+import { useState, useEffect } from "react";
+import { getUser } from "../util/User";
 
 export default function Manage({userData}) {
   const { query } = useRouter()
+  const [user, setUser] = useState(undefined)
+  useEffect(() => {
+    setUser(getUser())
+  }, user)
+  if (!user) return <Login />
   let itemName = query.itemName
   if (!itemName || Array.isArray(itemName) || !assetsJson.home.includes(itemName)) {
     return (
@@ -27,7 +35,7 @@ export default function Manage({userData}) {
 
   return (
     <div className='mt-16 px-24 flex flex-col items-center text-custom-white-0'>
-      <Header name={userData.name} />
+      <Header name={`${user.firstName} ${user.lastName}`} />
       <div className='flex mt-4 flex-row items-center'>
         <div className='flex flex-row items-center'>
           <Link href='/'>

@@ -8,18 +8,18 @@ export async function handleRegister(
   const { body } = req;
   const data = JSON.parse(body);
   try {
-    let doc = await db.doc(`account/${data.email}`).get();
+    let doc = await db.doc(`users/${data.email}`).get();
     if (doc.exists) {
       return res.status(201).json({});
     } else {
       const newData = {
-        first_name: data.first_name,
-        last_name: data.first_name,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
         password: data.password,
-        phone: data.email,
       };
       await db
-        .doc(`account/${data.email}`)
+        .doc(`users/${data.email}`)
         .create({
           ...newData,
         })
