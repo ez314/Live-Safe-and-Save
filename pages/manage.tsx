@@ -27,12 +27,12 @@ const Manage: NextPage = () => {
       <div className='flex mt-4 flex-row items-center'>
         <div className='flex flex-row items-center'>
           <Link href='/'>
-            <div className='flex flex-col items-center tab-hoverable'>
+            <div className='relative flex flex-col items-center tab-hoverable'>
               <div className='flex flex-row items-center'>
                 <HomeSVG width={svgSize} height={svgSize} />
                 <div className='ml-2 text-lg cursor-pointer'>Home Insurance</div>
               </div>
-              <div className='h-mini bg-custom-white-0 w-0 underline' />
+              <div className='absolute bottom-0 h-mini bg-custom-white-0 w-0 underline' />
             </div>
           </Link>
           <span>&nbsp;&gt; Manage {itemName}</span>
