@@ -3,7 +3,7 @@ import assetsJson from '../assets.json'
 import { processItemName } from './_app'
 import Header from '../components/Header'
 
-export default function Home({userData}) {
+export default function Index({ userData }) {
   const assets = assetsJson.home.map((t) => <HomeAsset key={t} className='m-3' type={processItemName(t)} />)
   return (
     <div className='mt-16 flex flex-col items-center text-custom-white-0'>

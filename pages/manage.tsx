@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { useRouter } from "next/router"
+import Header from "../components/Header";
 import CheckSVG from "../components/svg/CheckSVG"
 import CircleSVG from "../components/svg/CircleSVG"
 import BanSVG from "../components/svg/BanSVG"
@@ -8,7 +9,6 @@ import assetsJson from '../assets.json'
 import { processItemName } from "./_app"
 import AssetCard from "../components/AssetCard";
 import {db} from "../util/Firebase";
-import Header from "../components/Header";
 
 export default function Manage({userData}) {
   const { query } = useRouter()

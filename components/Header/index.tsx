@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import HomeSVG from './svg/HomeSVG'
-import HeartSVG from './svg/HeartSVG'
+import HomeSVG from '../svg/HomeSVG'
+import HeartSVG from '../svg/HeartSVG'
 
 export default function Header({name}) {
     return (
