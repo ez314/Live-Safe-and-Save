@@ -8,7 +8,7 @@ class ObjectDetector:
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model, self.preprocess = clip.load('ViT-B/32', self.device)
     
-    def runDetect(self,filename,options = ["smoke detector", "lock", "fire extinguisher","nothing"]):
+    def runDetect(self,filename,options = ["smoke detector", "storm shutter", "roof", "heating", "plumbing", "electrical", "security camera", "deadbolt lock", "sprinkler system","nothing"]):
         # Prepare the inputs
         image = self.preprocess(Image.open(filename)).unsqueeze(0).to(self.device)
         

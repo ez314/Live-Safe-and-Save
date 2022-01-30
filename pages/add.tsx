@@ -23,6 +23,7 @@ export default function Add() {
   const nameRef = useRef<HTMLInputElement>(null)
   const [ready, setReady] = useState({ imageReady: false, invoiceReady: false, nameReady: false })
   const [user, setUser] = useState(undefined)
+  const [done, setDone] = useState('nope')
   useEffect(() => {
     setUser(getUser())
   }, user)
@@ -36,20 +37,21 @@ export default function Add() {
     )
   }
   function addAsset() {
+    setDone('loading')
     const itemName = query.itemName as string
     const assetRef = ref(storage, `asset/${user.firstName}_${user.lastName}_${itemName.replaceAll(" ", "_")}_${nameRef.current.value}`)
     const invoiceRef = ref(storage, `invoice/${user.firstName}_${user.lastName}_${itemName.replaceAll(" ", "_")}_${nameRef.current.value}`)
     async function upload() {
       let imageUrl = ''
       let invoiceUrl = ''
-      if (inputImageRef.current.files[0]) {
+      if (inputImageRef.current.files.length > 0) {
         await uploadBytes(assetRef, inputImageRef.current.files[0]).then((result) => {
           imageUrl = `https://storage.googleapis.com/tamuhack-s22.appspot.com/${result.ref.fullPath}`
         }).catch((err) => {
           console.log(err)
         })
       }
-      if (inputInvoiceRef.current.files[0]) {
+      if (inputInvoiceRef.current.files.length > 0) {
         await uploadBytes(invoiceRef, inputInvoiceRef.current.files[0]).then((result) => {
           invoiceUrl = `https://storage.googleapis.com/tamuhack-s22.appspot.com/${result.ref.fullPath}`
         }).catch((err) => {
@@ -73,8 +75,52 @@ export default function Add() {
         if (res.status !== 200) {
           console.log(res.status)
         }
-        window.open('/', '_self')
+        //window.open('/', '_self')
       }).catch((err) => console.log(err))
+      let objectDetect = false
+      if (inputImageRef.current?.files.length > 0) {
+        const formData = new FormData()
+        formData.append('image', inputImageRef.current.files[0])
+        formData.append('expected', itemName)
+        await fetch('http://localhost:5000/objectDetect', {
+          mode: 'cors',
+          method: 'POST',
+          body: formData
+        }).then((res) => res.json()).then((data) => {
+          if (data.result) {
+            objectDetect = true
+          }
+        }).catch(error => {
+          console.error(error)
+        })
+      }
+      let nlp = false
+      let nlpresult = {}
+      if (inputInvoiceRef.current?.files.length > 0) {
+        nlp = true
+        const formData2 = new FormData()
+        formData2.append('image', inputInvoiceRef.current.files[0])
+        await fetch('http://localhost:5000/invoiceDetect', {
+          mode: 'cors',
+          method: 'POST',
+          body: formData2
+        }).then((res) => res.json()).then((data) => {
+          nlpresult = data.result
+        }).catch(error => {
+          console.error(error)
+        })
+      }
+      setDone('yes')
+      if (objectDetect) {
+        let msg = "Upload accepted..."
+        if(nlp){
+          msg = JSON.stringify(nlpresult) + '\nUpload accepted...'
+        }
+        alert(msg)
+        window.open('/', '_self')
+      } else {
+        alert("Upload failed...")
+      }
     }
     upload()
     console.log("UPLOAD")
@@ -107,7 +153,7 @@ export default function Add() {
         </div>
       </div>
 
-      <div className='mt-8 flex flex-col items-center justify-center'>
+      {done === 'nope' ? <div className='mt-8 flex flex-col items-center justify-center'>
         <div className='m-2 flex flex-col'>
           <div className='text-lg font-semibold'>{itemName} Name</div>
           <input ref={nameRef} type='text' className='transition text-custom-gray-0 outline-none border-custom-white-0 border-2 rounded' onChange={() => {
@@ -153,7 +199,15 @@ export default function Add() {
         <div className={`custom-btn m-9 ${((ready.imageReady || ready.invoiceReady) && ready.nameReady) ? 'hover:bg-custom-green hover:border-custom-green' : 'hover:bg-custom-red hover:border-custom-red'}`} onClick={() => {
           addAsset()
         }}>Add {itemName}</div>
-      </div>
+      </div> : <>
+        <button type="button" className="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-indigo-500 hover:bg-indigo-400 transition ease-in-out duration-150 cursor-not-allowed">
+          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Processing...
+        </button>
+      </>}
     </div>
   )
 }

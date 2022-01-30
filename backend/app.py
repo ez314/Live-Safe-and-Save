@@ -4,10 +4,15 @@ import logging
 from objectDetect import ObjectDetector
 from PIL import Image
 from invoiceDetect import predict
+from flask import Flask, jsonify
+from flask_cors import CORS, cross_origin
+
 app = Flask(__name__)
+CORS(app, support_credentials=True)
 det = ObjectDetector()
 
 @app.route("/objectDetect",methods = ['POST'])
+@cross_origin(supports_credentials=True)
 def objectDetect():
     try:
         file = request.files['image']
@@ -23,6 +28,7 @@ def objectDetect():
         return jsonify({'msg': '500 error'})
 
 @app.route("/invoiceDetect",methods = ['POST'])
+@cross_origin(supports_credentials=True)
 def invoiceDetect():
     try:
         file = request.files['image']
