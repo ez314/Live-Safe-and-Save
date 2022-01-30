@@ -13,7 +13,7 @@ import Login from "../components/Auth/Login";
 import { useState, useEffect } from "react";
 import { getUser } from "../util/User";
 
-export default function Manage({userData, assetsData}) {
+export default function Manage({assetsData}) {
   const [activeFilter, setActiveFilter] = useState(true);
   const [needsAttentionFilter, setNeedsAttentionFilter] = useState(true);
   const [expiredFilter, setExpiredFilter] = useState(true);
@@ -35,6 +35,9 @@ export default function Manage({userData, assetsData}) {
     )
   }
   itemName = processItemName(itemName)
+
+  assetsData = assetsData.filter(x => x.type == query.itemName && x.owner == user.email)
+
   const svgSize = 19
 
   const whyItem = `Why should I have a ${itemName}? Because it is good! Everyone has one, so you should have one too. A ${itemName} is absolutely essential and saves 18219 homes in the United States last year.`
@@ -105,16 +108,7 @@ export default function Manage({userData, assetsData}) {
 export async function getServerSideProps({ query }) {
   const { db } = require('../util/Firebase')
 
-  // todo: actually have login
-  const username = 'ericz314271@gmail.com'
-
-  const usersRef = db.collection('users').doc(username)
-  const userSnapshot = await usersRef.get()
-  const userData = userSnapshot.data();
-
   const assetsQuery = db.collection('assets')
-    .where('owner', '==', username)
-    .where('type', '==', query.itemName)
   const assetsSnapshot = await assetsQuery.get()
 
   const currentTimestamp = (new Date()).getTime()
@@ -130,7 +124,9 @@ export async function getServerSideProps({ query }) {
     })
   });
 
+  console.log(assetsData)
+
   return {
-    props: {userData, assetsData}
+    props: {assetsData}
   }
 }
