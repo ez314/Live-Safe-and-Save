@@ -36,7 +36,7 @@ export default function Add() {
       </div>
     )
   }
-  function addAsset() {
+  function addAsset(name, imageFile, invoiceFile) {
     setDone('loading')
     const itemName = query.itemName as string
     const assetRef = ref(storage, `asset/${user.firstName}_${user.lastName}_${itemName.replaceAll(" ", "_")}_${nameRef.current.value}`)
@@ -44,49 +44,33 @@ export default function Add() {
     async function upload() {
       let imageUrl = ''
       let invoiceUrl = ''
-      if (inputImageRef.current.files.length > 0) {
-        await uploadBytes(assetRef, inputImageRef.current.files[0]).then((result) => {
+      if (imageFile) {
+        await uploadBytes(assetRef, imageFile).then((result) => {
           imageUrl = `https://storage.googleapis.com/tamuhack-s22.appspot.com/${result.ref.fullPath}`
         }).catch((err) => {
           console.log(err)
         })
       }
-      if (inputInvoiceRef.current.files.length > 0) {
-        await uploadBytes(invoiceRef, inputInvoiceRef.current.files[0]).then((result) => {
+      if (invoiceFile) {
+        await uploadBytes(invoiceRef, invoiceFile).then((result) => {
           invoiceUrl = `https://storage.googleapis.com/tamuhack-s22.appspot.com/${result.ref.fullPath}`
         }).catch((err) => {
           console.log(err)
         })
       }
-      fetch('/api/add', {
-        mode: 'cors',
-        method: 'POST',
-        body: JSON.stringify({
-          name: nameRef.current.value,
-          imgUrl: imageUrl,
-          invoiceUrl: invoiceUrl,
-          lastUpdated: Date.now().toString(),
-          owner: user.email,
-          type: itemName,
-          firstName: user.firstName,
-          lastName: user.lastName,
-        })
-      }).then(async (res) => {
-        if (res.status !== 200) {
-          console.log(res.status)
-        }
-        //window.open('/', '_self')
-      }).catch((err) => console.log(err))
+      
       let objectDetect = false
-      if (inputImageRef.current?.files.length > 0) {
+      let mlres = ""
+      if (imageFile) {
         const formData = new FormData()
-        formData.append('image', inputImageRef.current.files[0])
+        formData.append('image', imageFile)
         formData.append('expected', itemName)
         await fetch('http://localhost:5000/objectDetect', {
           mode: 'cors',
           method: 'POST',
           body: formData
         }).then((res) => res.json()).then((data) => {
+          mlres = data.mlres
           if (data.result) {
             objectDetect = true
           }
@@ -96,10 +80,10 @@ export default function Add() {
       }
       let nlp = false
       let nlpresult = {}
-      if (inputInvoiceRef.current?.files.length > 0) {
+      if (invoiceFile) {
         nlp = true
         const formData2 = new FormData()
-        formData2.append('image', inputInvoiceRef.current.files[0])
+        formData2.append('image', invoiceFile)
         await fetch('http://localhost:5000/invoiceDetect', {
           mode: 'cors',
           method: 'POST',
@@ -112,6 +96,25 @@ export default function Add() {
       }
       setDone('yes')
       if (objectDetect) {
+        fetch('/api/add', {
+          mode: 'cors',
+          method: 'POST',
+          body: JSON.stringify({
+            name: name,
+            imgUrl: imageUrl,
+            invoiceUrl: invoiceUrl,
+            lastUpdated: Date.now().toString(),
+            owner: user.email,
+            type: itemName,
+            firstName: user.firstName,
+            lastName: user.lastName,
+          })
+        }).then(async (res) => {
+          if (res.status !== 200) {
+            console.log(res.status)
+          }
+          //window.open('/', '_self')
+        }).catch((err) => console.log(err))
         let msg = "Upload accepted..."
         if(nlp){
           msg = JSON.stringify(nlpresult) + '\nUpload accepted...'
@@ -119,7 +122,8 @@ export default function Add() {
         alert(msg)
         window.open('/', '_self')
       } else {
-        alert("Upload failed...")
+        alert("Upload not accepted due to unrecognized object, expected "+itemName+" but got "+mlres)
+        setDone('nope')
       }
     }
     upload()
@@ -197,7 +201,7 @@ export default function Add() {
           }
         }} />
         <div className={`custom-btn m-9 ${((ready.imageReady || ready.invoiceReady) && ready.nameReady) ? 'hover:bg-custom-green hover:border-custom-green' : 'hover:bg-custom-red hover:border-custom-red'}`} onClick={() => {
-          addAsset()
+          addAsset(nameRef.current.value, (inputImageRef.current.files) ? inputImageRef.current.files[0] : undefined, (inputInvoiceRef.current.files) ? inputInvoiceRef.current.files[0] : undefined)
         }}>Add {itemName}</div>
       </div> : <>
         <button type="button" className="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-indigo-500 hover:bg-indigo-400 transition ease-in-out duration-150 cursor-not-allowed">

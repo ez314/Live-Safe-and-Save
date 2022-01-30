@@ -20,9 +20,9 @@ def objectDetect():
         expected = request.form['expected']
         ret = det.runDetect(file)
         if ret==expected:
-            return jsonify({'msg': 'success', 'result': True})
+            return jsonify({'msg': 'success', 'result': True, 'mlres':ret})
         else:
-            return jsonify({'msg': 'success', 'result': False})
+            return jsonify({'msg': 'success', 'result': False, 'mlres':ret})
     except Exception as e:
         logging.error(traceback.format_exc())
         return jsonify({'msg': '500 error'})
