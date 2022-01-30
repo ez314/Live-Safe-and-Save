@@ -26,6 +26,9 @@ module.exports = {
         '15p': "15%",
         '70p': "70%",
       },
+      height: {
+        'mini': '2px',
+      },
       backgroundColor: {
         ...colors
       },
