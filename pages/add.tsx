@@ -73,8 +73,51 @@ export default function Add() {
         if (res.status !== 200) {
           console.log(res.status)
         }
-        window.open('/', '_self')
+        //window.open('/', '_self')
       }).catch((err) => console.log(err))
+      let objectDetect = false
+      if (inputImageRef.current?.files.length > 0) {
+        const formData = new FormData()
+        formData.append('image', inputImageRef.current.files[0])
+        formData.append('expected', itemName)
+        await fetch('http://localhost:5000/objectDetect', {
+          mode: 'cors',
+          method: 'POST',
+          body: formData
+        }).then((res) => res.json()).then((data) => {
+          if (data.result) {
+            objectDetect = true
+          }
+        }).catch(error => {
+          console.error(error)
+        })
+      }
+      let nlp = false
+      let nlpresult = {}
+      if (inputInvoiceRef.current?.files.length > 0) {
+        nlp = true
+        const formData2 = new FormData()
+        formData2.append('image', inputInvoiceRef.current.files[0])
+        await fetch('http://localhost:5000/invoiceDetect', {
+          mode: 'cors',
+          method: 'POST',
+          body: formData2
+        }).then((res) => res.json()).then((data) => {
+          nlpresult = data.result
+        }).catch(error => {
+          console.error(error)
+        })
+      }
+      if (objectDetect) {
+        let msg = "Upload accepted..."
+        if(nlp){
+          msg = JSON.stringify(nlpresult)
+        }
+        alert(msg)
+        window.open('/', '_self')
+      } else {
+        alert("Upload failed...")
+      }
     }
     upload()
     console.log("UPLOAD")
