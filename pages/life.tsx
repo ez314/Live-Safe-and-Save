@@ -41,7 +41,7 @@ export default function Life() {
           <span className='text-3xl mt-3 mb-2'>Your Status: <span className={`text-green-300`}>{status}</span></span>
 
         <div className='text-xl'>Estimated Discount</div>
-        <div className='my-2 text-4xl font-extrabold'><span className='text-custom-green'>$</span>80.83</div>
+        <div className='my-2 text-4xl font-extrabold'><span className='text-custom-green'>$</span>17.83</div>
           <div className='text-md mb-3 underline'>How was this calculated?</div>
 
           <div className="ml-3">
