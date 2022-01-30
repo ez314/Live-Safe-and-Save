@@ -13,7 +13,7 @@ import Login from "../components/Auth/Login";
 import { useState, useEffect } from "react";
 import { getUser } from "../util/User";
 
-export default function Manage({userData}) {
+export default function Manage({userData, assetsData}) {
   const { query } = useRouter()
   const [user, setUser] = useState(undefined)
   useEffect(() => {
@@ -73,26 +73,42 @@ export default function Manage({userData}) {
       </div>
 
       <div className='mt-16 space-y-16 w-full flex flex-col items-center'>
-        <AssetCard type={itemName} assetId={'asdf1234'} name='Bedroom' img={"https://media.discordapp.net/attachments/937113903048036382/937114671968825424/IMG_20220129_163859.jpg?width=1410&height=1058"}/>
-      </div>
-      <div className='mt-16 space-y-16 w-full flex flex-col items-center'>
-        <AssetCard type={itemName} assetId={'asdf1234'} name='Living Room' img={"https://media.discordapp.net/attachments/936871002418319364/937113410229895228/IMG_0160.jpg?width=1410&height=1410"}/>
+        {
+          assetsData.map(
+            ({type, assetId, assetName, img}) =>
+              <AssetCard key={assetId} type={type} assetId={assetId} assetName={assetName} img={img}/>
+          )
+        }
       </div>
 
     </div>
   )
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ query }) {
   const { db } = require('../util/Firebase')
 
   // todo: actually have login
-  const usersRef = db.collection('users').doc('ericz314271@gmail.com')
-  const userSnapshot = await usersRef.get()
+  const username = 'ericz314271@gmail.com'
 
+  const usersRef = db.collection('users').doc(username)
+  const userSnapshot = await usersRef.get()
   const userData = userSnapshot.data();
 
+  const assetsQuery = db.collection('assets')
+    .where('owner', '==', username)
+    .where('type', '==', query.itemName)
+  const assetsSnapshot = await assetsQuery.get()
+
+  let assetsData = []
+  assetsSnapshot.forEach(doc => {
+    assetsData.push({
+      assetId: doc.id,
+      ...doc.data()
+    })
+  });
+
   return {
-    props: {userData}
+    props: {userData, assetsData}
   }
 }
