@@ -39,6 +39,9 @@ export default function Life() {
           <Chart scores={[22,24,35,37,36,38,40,45]} width={1000}/>
   
           <span className='text-3xl mt-3 mb-2'>Your Status: <span className={`text-green-300`}>{status}</span></span>
+
+        <div className='text-xl'>Estimated Discount</div>
+        <div className='my-2 text-4xl font-extrabold'><span className='text-custom-green'>$</span>80.83</div>
           <div className='text-md mb-3 underline'>How was this calculated?</div>
 
 
@@ -47,6 +50,10 @@ export default function Life() {
             <ActivityCard type="info" message="Heart score met daily goal!" timestamp={new Date(2022, 0, 29, 16, 24).getTime()}/>
             <ActivityCard type="negative" message="Heart score not quite at goal." timestamp={new Date(2022, 0, 28, 10, 12).getTime()}/>
             <ActivityCard type="positive" message="Walked 3.28 miles!" timestamp={new Date(2022, 0, 26, 8).getTime()}/>
+            <ActivityCard type="info" message="Heart score met daily goal!" timestamp={new Date(2022, 0, 25, 16, 24).getTime()}/>
+            <ActivityCard type="negative" message="Heart score not quite at goal." timestamp={new Date(2022, 0, 23, 10, 12).getTime()}/>
+            <ActivityCard type="positive" message="Walked 3.28 miles!" timestamp={new Date(2022, 0, 22, 8).getTime()}/>
+            <ActivityCard type="positive" message="Walked 3.28 miles!" timestamp={new Date(2022, 0, 21, 8).getTime()}/>
           </div>
           </> 
           :
