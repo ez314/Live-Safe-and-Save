@@ -37,8 +37,8 @@ export default function Add() {
   }
   function addAsset() {
     const itemName = query.itemName as string
-    const assetRef = ref(storage, `asset/${user.email}_${itemName.replaceAll(" ", "_")}_${nameRef.current.value}`)
-    const invoiceRef = ref(storage, `invoice/${user.email}_${itemName.replaceAll(" ", "_")}_${nameRef.current.value}`)
+    const assetRef = ref(storage, `asset/${user.firstName}_${user.lastName}_${itemName.replaceAll(" ", "_")}_${nameRef.current.value}`)
+    const invoiceRef = ref(storage, `invoice/${user.firstName}_${user.lastName}_${itemName.replaceAll(" ", "_")}_${nameRef.current.value}`)
     async function upload() {
       let imageUrl = ''
       let invoiceUrl = ''
@@ -65,7 +65,9 @@ export default function Add() {
           invoiceUrl: invoiceUrl,
           lastUpdated: Date.now().toString(),
           owner: user.email,
-          type: itemName
+          type: itemName,
+          firstName: user.firstName,
+          lastName: user.lastName,
         })
       }).then(async (res) => {
         if (res.status !== 200) {

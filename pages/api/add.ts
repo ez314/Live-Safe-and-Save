@@ -2,12 +2,13 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '../../util/Firebase';
 
 export async function handleAdd(req: NextApiRequest, res: NextApiResponse) {
-  console.log('TEST');
   const { body } = req;
   const data = JSON.parse(body);
   try {
     let doc = await db
-      .doc(`assets/${data.owner}_${data.type}_${data.assetName}`)
+      .doc(
+        `assets/${data.firstName}_${data.lastName}_${data.type}_${data.name}`
+      )
       .get();
     if (doc.exists) {
       return res.status(201).json({});
@@ -21,7 +22,9 @@ export async function handleAdd(req: NextApiRequest, res: NextApiResponse) {
         type: data.type,
       };
       await db
-        .doc(`assets/${data.owner}_${data.type}_${data.assetName}`)
+        .doc(
+          `assets/${data.firstName}_${data.lastName}_${data.type}_${data.name}`
+        )
         .create({
           ...newData,
         })
@@ -38,7 +41,6 @@ export default async function handleAddRequest(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log('TES');
   if (req.method === 'POST') {
     return handleAdd(req, res);
   } else {
