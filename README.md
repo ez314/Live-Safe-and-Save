@@ -1,5 +1,8 @@
 # Live Safe and Save
 
+![image](https://user-images.githubusercontent.com/36653830/151711491-db86f08d-a4aa-4c94-affd-02f347eec300.png)
+
+
 [Devpost](https://devpost.com/software/live-safe-and-save)
 
 ## Inspiration
