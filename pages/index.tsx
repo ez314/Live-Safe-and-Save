@@ -1,10 +1,9 @@
-import type { NextPage } from 'next'
 import HomeAsset from '../components/HomeAsset'
 import assetsJson from '../assets.json'
 import { processItemName } from './_app'
 import Header from '../components/Header'
 
-const Home: NextPage = () => {
+export default function Home({dbData}) {
   const assets = assetsJson.home.map((t) => <HomeAsset key={t} className='m-3' type={processItemName(t)} />)
   return (
     <div className='mt-16 flex flex-col items-center text-custom-white-0'>
@@ -23,4 +22,10 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export async function getServerSideProps() {
+  let db = require('../util/Firebase')
+  let dbData = null; // replace with fetching whatever data you need from firebase
+  return {
+    props: {dbData}
+  }
+}

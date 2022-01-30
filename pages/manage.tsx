@@ -1,4 +1,3 @@
-import { NextPage } from "next"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import CheckSVG from "../components/svg/CheckSVG"
@@ -9,7 +8,7 @@ import assetsJson from '../assets.json'
 import { processItemName } from "./_app"
 import AssetCard from "../components/AssetCard";
 
-const Manage: NextPage = () => {
+export default function Manage({dbData}) {
   const { query } = useRouter()
   let itemName = query.itemName
   if (!itemName || Array.isArray(itemName) || !assetsJson.home.includes(itemName)) {
@@ -73,4 +72,11 @@ const Manage: NextPage = () => {
     </div>
   )
 }
-export default Manage
+
+export async function getServerSideProps() {
+  let db = require('../util/Firebase')
+  let dbData = null; // replace with fetching whatever data you need from firebase
+  return {
+    props: {dbData}
+  }
+}

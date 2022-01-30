@@ -38,3 +38,4 @@ venv/
 
 .flaskenv
 __pycache__/
+/firebase.json
