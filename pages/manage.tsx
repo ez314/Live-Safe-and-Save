@@ -1,12 +1,13 @@
 import { NextPage } from "next"
 import Link from "next/link"
-import Router, { useRouter } from "next/router"
+import { useRouter } from "next/router"
 import CheckSVG from "../components/svg/CheckSVG"
 import CircleSVG from "../components/svg/CircleSVG"
 import BanSVG from "../components/svg/BanSVG"
 import HomeSVG from "../components/svg/HomeSVG"
 import assetsJson from '../assets.json'
 import { processItemName } from "./_app"
+import AssetCard from "../components/AssetCard";
 
 const Manage: NextPage = () => {
   const { query } = useRouter()
@@ -21,8 +22,10 @@ const Manage: NextPage = () => {
   itemName = processItemName(itemName)
   const svgSize = 19
 
+  const whyItem = `Why should I have a ${itemName}? Because it is good! Everyone has one, so you should have one too. A ${itemName} is absolutely essential and saves 18219 homes in the United States last year.`
+
   return (
-    <div className='mt-16 flex flex-col items-center text-custom-white-0'>
+    <div className='mt-16 px-24 flex flex-col items-center text-custom-white-0'>
       <div className='text-5xl font-black'>Eric Zhang</div>
       <div className='flex mt-4 flex-row items-center'>
         <div className='flex flex-row items-center'>
@@ -38,6 +41,8 @@ const Manage: NextPage = () => {
           <span>&nbsp;&gt; Manage {itemName}</span>
         </div>
       </div>
+
+      <div className='flex mt-4 text-center'>{whyItem}</div>
 
       <div className='mt-16 flex flex-col items-center'>
         <div className='custom-btn'>Add {itemName}</div>
@@ -58,6 +63,12 @@ const Manage: NextPage = () => {
         </div>
       </div>
 
+      <div className='mt-16 space-y-16 w-full flex flex-col items-center'>
+        <AssetCard type={itemName} assetId={'asdf1234'} name='Bedroom' img={"https://media.discordapp.net/attachments/937113903048036382/937114671968825424/IMG_20220129_163859.jpg?width=1410&height=1058"}/>
+      </div>
+      <div className='mt-16 space-y-16 w-full flex flex-col items-center'>
+        <AssetCard type={itemName} assetId={'asdf1234'} name='Living Room' img={"https://media.discordapp.net/attachments/936871002418319364/937113410229895228/IMG_0160.jpg?width=1410&height=1410"}/>
+      </div>
 
     </div>
   )
