@@ -113,7 +113,6 @@ export default function Add() {
           if (res.status !== 200) {
             console.log(res.status)
           }
-          //window.open('/', '_self')
         }).catch((err) => console.log(err))
         let msg = "Upload accepted..."
         if(nlp){

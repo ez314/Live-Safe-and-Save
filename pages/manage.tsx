@@ -113,7 +113,7 @@ export async function getServerSideProps({ query }) {
   const assetsQuery = db.collection('assets')
   const assetsSnapshot = await assetsQuery.get()
 
-  const currentTimestamp = (new Date()).getTime()
+  const currentTimestamp = parseInt(Date.now().toString())
   let assetsData = []
   assetsSnapshot.forEach(doc => {
     const lastUpdatedTimestamp = Date.parse(doc.data().lastUpdated)
