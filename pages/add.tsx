@@ -7,9 +7,12 @@ import BanSVG from "../components/svg/BanSVG"
 import HomeSVG from "../components/svg/HomeSVG"
 import assetsJson from '../assets.json'
 import { processItemName } from "./_app"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import { getUser } from "../util/User"
+import Login from "../components/Auth/Login"
+import Header from "../components/Header"
 
-const Add: NextPage = () => {
+export default function Add() {
   const { query } = useRouter()
   const imageRef = useRef<HTMLDivElement>(null)
   const inputImageRef = useRef<HTMLInputElement>(null)
@@ -17,6 +20,11 @@ const Add: NextPage = () => {
   const inputInvoiceRef = useRef<HTMLInputElement>(null)
   const nameRef = useRef<HTMLInputElement>(null)
   const [ready, setReady] = useState({ imageReady: false, invoiceReady: false, nameReady: false })
+  const [user, setUser] = useState(undefined)
+  useEffect(() => {
+    setUser(getUser())
+  }, user)
+  if (!user) return <Login />
   let itemName = query.itemName
   if (!itemName || Array.isArray(itemName) || !assetsJson.home.includes(itemName)) {
     return (
@@ -30,7 +38,7 @@ const Add: NextPage = () => {
 
   return (
     <div className='mt-16 flex flex-col items-center text-custom-white-0'>
-      <div className='text-5xl font-black'>Eric Zhang</div>
+      <Header name={`${user.firstName} ${user.lastName}`} />
       <div className='flex mt-4 flex-row items-center'>
         <div className='flex flex-row items-center'>
           <Link href='/'>
@@ -56,7 +64,7 @@ const Add: NextPage = () => {
       <div className='mt-8 flex flex-col items-center justify-center'>
         <div className='m-2 flex flex-col'>
           <div className='text-lg font-semibold'>{itemName} Name</div>
-          <input ref={nameRef} type='text' className='text-custom-gray-0 outline-none border-custom-white-0 border-2 rounded' onChange={() => {
+          <input ref={nameRef} type='text' className='transition text-custom-gray-0 outline-none border-custom-white-0 border-2 rounded' onChange={() => {
             if (nameRef.current?.value && nameRef.current?.value.length > 0) {
               nameRef.current?.classList.add('border-custom-green')
               nameRef.current?.classList.remove('border-custom-red')
@@ -68,7 +76,7 @@ const Add: NextPage = () => {
             }
           }} />
         </div>
-        <div id='image-upload-button' ref={imageRef} className='custom-btn m-2' onClick={() => {
+        <div id='image-upload-button' ref={imageRef} className='custom-btn transition m-2' onClick={() => {
           document.getElementById('image-upload')?.click()
         }}>Upload Image</div>
         <input id='image-upload' type='file' style={{ display: 'none' }} ref={inputImageRef} onChange={() => {
@@ -82,7 +90,7 @@ const Add: NextPage = () => {
             setReady({ ...ready, imageReady: false })
           }
         }} />
-        <div id='invoice-upload-button' ref={invoiceRef} className='custom-btn m-2' onClick={() => {
+        <div id='invoice-upload-button' ref={invoiceRef} className='custom-btn transition m-2' onClick={() => {
           document.getElementById('invoice-upload')?.click()
         }}>Upload Invoice/Receipt</div>
         <input id='invoice-upload' type='file' style={{ display: 'none' }} ref={inputInvoiceRef} onChange={() => {
@@ -101,4 +109,3 @@ const Add: NextPage = () => {
     </div>
   )
 }
-export default Add

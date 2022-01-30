@@ -1,11 +1,14 @@
 import { NextPage } from "next"
-import { useState } from "react"
 import { GoogleLogin } from 'react-google-login';
 import Header from '../components/Header';
 import Chart from '../components/Chart';
+import { useState, useEffect } from "react";
+import { getUser } from "../util/User";
+import Login from "../components/Auth/Login";
 
-const Life: NextPage = () => {
-    let [connected, setConnected] = useState(0);
+export default function Life() {
+  const [user, setUser] = useState(undefined)
+  let [connected, setConnected] = useState(0);
     let status = "Exceptional"
     let statusColor = "green"
 
@@ -17,10 +20,14 @@ const Life: NextPage = () => {
         }, 8000)
     }
 
+  useEffect(() => {
+    setUser(getUser())
+  }, user)
+  if (!user) return <Login />
   return (
     <div className='mt-16 flex flex-col items-center text-custom-white-0'>
       
-      <Header name="Eric Zhang" />
+      <Header name={`${user.firstName} ${user.lastName}`} />
 
       <div className='mt-16 flex flex-col items-center'>
           {connected > 1 ? 
@@ -59,4 +66,3 @@ const Life: NextPage = () => {
     </div>
   )
 }
-export default Life
