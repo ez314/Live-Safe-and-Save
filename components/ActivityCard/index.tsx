@@ -71,7 +71,7 @@ export default function ActivityCard({type = 'none', message = "unknown event", 
     console.log(additionalClasses)
 
     return (
-        <div className={additionalClasses}>
+        <div className="flex card px-5 py-3 space-x-5 fill-current">
             <span className="inline-block">
                 {icon}
             </span>
