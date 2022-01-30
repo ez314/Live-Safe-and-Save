@@ -14,12 +14,18 @@ import { useState, useEffect } from "react";
 import { getUser } from "../util/User";
 
 export default function Manage({userData, assetsData}) {
+  const [activeFilter, setActiveFilter] = useState(true);
+  const [needsAttentionFilter, setNeedsAttentionFilter] = useState(true);
+  const [expiredFilter, setExpiredFilter] = useState(true);
+
   const { query } = useRouter()
+
   const [user, setUser] = useState(undefined)
   useEffect(() => {
     setUser(getUser())
   }, user)
   if (!user) return <Login />
+
   let itemName = query.itemName
   if (!itemName || Array.isArray(itemName) || !assetsJson.home.includes(itemName)) {
     return (
@@ -58,25 +64,36 @@ export default function Manage({userData, assetsData}) {
       </div>
 
       <div className='mt-16 space-x-8 flex flex-row items-center'>
-        <div className='flex flex-row items-center hover:scale-110 transition'>
-          <CheckSVG className='text-custom-green' width={svgSize} height={svgSize} />
-          <span className='ml-2 text-lg cursor-pointer'>Approved</span>
+        <div
+          className='flex flex-row items-center hover:scale-110 transition cursor-pointer'
+          onClick={() => setActiveFilter(!activeFilter)}
+        >
+          <CheckSVG className={`${activeFilter ? 'text-custom-green' : 'text-custom-gray-3'} transition`} width={svgSize} height={svgSize} />
+          <span className='ml-2 text-lg'>Active</span>
         </div>
-        <div className='flex flex-row items-center hover:scale-110 transition'>
-          <CircleSVG className='text-custom-gray-3' width={svgSize} height={svgSize} />
-          <span className='ml-2 text-lg cursor-pointer'>Needs Attention</span>
+        <div
+          className='flex flex-row items-center hover:scale-110 transition cursor-pointer'
+          onClick={() => setNeedsAttentionFilter(!needsAttentionFilter)}
+        >
+          <CircleSVG className={`${needsAttentionFilter ? 'text-custom-gold' : 'text-custom-gray-3'} transition`} width={svgSize} height={svgSize} />
+          <span className='ml-2 text-lg'>Needs Attention</span>
         </div>
-        <div className='flex flex-row items-center hover:scale-110 transition'>
-          <BanSVG className='text-custom-red' width={svgSize} height={svgSize} />
-          <span className='ml-2 text-lg cursor-pointer'>Expired</span>
+        <div
+          className='flex flex-row items-center hover:scale-110 transition cursor-pointer'
+          onClick={() => setExpiredFilter(!expiredFilter)}
+        >
+          <BanSVG className={`${expiredFilter ? 'text-custom-red' : 'text-custom-gray-3'} transition`} width={svgSize} height={svgSize} />
+          <span className='ml-2 text-lg'>Expired</span>
         </div>
       </div>
 
       <div className='mt-16 space-y-16 w-full flex flex-col items-center'>
         {
-          assetsData.map(
-            ({type, assetId, assetName, img}) =>
-              <AssetCard key={assetId} type={type} assetId={assetId} assetName={assetName} img={img}/>
+          assetsData
+            .filter((data) => data.state == 'active' && activeFilter || data.state == 'needs-attention' && needsAttentionFilter || data.state == 'expired' && expiredFilter)
+            .map(
+            ({type, assetId, assetName, img, state}) =>
+              <AssetCard key={assetId} type={type} assetId={assetId} assetName={assetName} img={img} state={state}/>
           )
         }
       </div>
@@ -100,11 +117,16 @@ export async function getServerSideProps({ query }) {
     .where('type', '==', query.itemName)
   const assetsSnapshot = await assetsQuery.get()
 
+  const currentTimestamp = (new Date()).getTime()
   let assetsData = []
   assetsSnapshot.forEach(doc => {
+    const lastUpdatedTimestamp = Date.parse(doc.data().lastUpdated)
+    const ageDays = (currentTimestamp - lastUpdatedTimestamp) / (1000 * 60 * 60 * 24)
     assetsData.push({
       assetId: doc.id,
-      ...doc.data()
+      lastUpdatedTimestamp,
+      state: ageDays > 30 ? 'expired' : ageDays > 7 ? 'needs-attention' : 'active',
+      ...doc.data(),
     })
   });
 
