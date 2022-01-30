@@ -5,6 +5,7 @@ import Chart from '../components/Chart';
 import { useState, useEffect } from "react";
 import { getUser } from "../util/User";
 import Login from "../components/Auth/Login";
+import ActivityCard from "../components/ActivityCard";
 
 export default function Life() {
   const [user, setUser] = useState(undefined)
@@ -37,7 +38,16 @@ export default function Life() {
           <div className='custom-btn'>Recalculate</div> */}
           <Chart scores={[22,24,35,37,36,38,40,45]} width={1000}/>
   
-          <span className='text-3xl mt-3'>Your Status: <span className={`text-green-300`}>{status}</span></span>
+          <span className='text-3xl mt-3 mb-2'>Your Status: <span className={`text-green-300`}>{status}</span></span>
+          <div className='text-md mb-3 underline'>How was this calculated?</div>
+
+
+          <div className="grid grid-cols-2 gap-4 min-w-full">
+            <ActivityCard type="positive" message="Walked 2.53 miles!" timestamp={new Date().getTime()}/>
+            <ActivityCard type="info" message="Heart score met daily goal!" timestamp={new Date(2022, 0, 29, 16, 24).getTime()}/>
+            <ActivityCard type="negative" message="Heart score not quite at goal." timestamp={new Date(2022, 0, 28, 10, 12).getTime()}/>
+            <ActivityCard type="positive" message="Walked 3.28 miles!" timestamp={new Date(2022, 0, 26, 8).getTime()}/>
+          </div>
           </> 
           :
           connected == 1 ?
